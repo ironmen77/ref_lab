@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reframing Lab — Pola Pikir Berbasis Aset</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F4EF;
+  --bg2: #EDEAE3;
+  --surface: #FFFFFF;
+  --text: #1C1917;
+  --text2: #6B6560;
+  --text3: #A8A29E;
+  --green: #166534;
+  --green-bg: #DCFCE7;
+  --green-mid: #15803D;
+  --red: #991B1B;
+  --red-bg: #FEE2E2;
+  --amber: #92400E;
+  --amber-bg: #FEF3C7;
+  --teal: #0F4C5C;
+  --teal-bg: #E0F2F1;
+  --teal-mid: #0D9488;
+  --border: #E2DDD8;
+  --accent: #2D6A4F;
+  --accent2: #B7791F;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+.nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  color: var(--accent);
+  letter-spacing: -.3px;
+}
+.nav-brand span { font-style: italic; color: var(--accent2); }
+.nav-tabs { display: flex; gap: 4px; }
+.nav-tab {
+  padding: 7px 18px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .2s;
+}
+.nav-tab:hover { background: var(--bg2); color: var(--text); }
+.nav-tab.active { background: var(--accent); color: #fff; }
+
+/* ── PAGES ── */
+.page { display: none; padding: 32px 24px; max-width: 900px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* ── MATERI PAGE ── */
+.page-header { margin-bottom: 28px; }
+.page-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 30px;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: -.5px;
+}
+.page-sub { font-size: 15px; color: var(--text2); line-height: 1.6; }
+
+.filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.chip {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .15s;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.result-label { font-size: 13px; color: var(--text3); margin-bottom: 16px; }
+
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 14px; }
+
+.mcard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: box-shadow .2s;
+}
+.mcard:hover { box-shadow: 0 4px 20px rgba(0,0,0,.07); }
+
+.mcard-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.mcard-sit { font-size: 13px; color: var(--text2); line-height: 1.6; font-style: italic; flex: 1; }
+
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.b-defensif { background: #FEF3C7; color: #92400E; }
+.b-pesimis  { background: #FCE7F3; color: #831843; }
+.b-solusi   { background: #DCFCE7; color: #166534; }
+.b-banding  { background: #EDE9FE; color: #4C1D95; }
+.b-menggurui{ background: #FFE4E6; color: #9F1239; }
+.b-emosi    { background: #E0F2FE; color: #0C4A6E; }
+
+.mcard-divider { height: 1px; background: var(--bg2); }
+
+.pill-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.lbl-avoid { color: var(--red); }
+.lbl-good  { color: var(--green-mid); }
+.lbl-why   { color: var(--text3); }
+
+.mcard-bad {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+  padding: 9px 12px;
+  background: var(--red-bg);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid #EF4444;
+}
+.mcard-good {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+  padding: 9px 12px;
+  background: var(--green-bg);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid #22C55E;
+}
+.mcard-why {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.6;
+  padding: 8px 11px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+/* ── KUIS PAGE ── */
+.kuis-wrap { max-width: 680px; margin: 0 auto; }
+
+.progress-bar-wrap { background: var(--bg2); border-radius: 999px; height: 6px; margin-bottom: 28px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width .4s ease; }
+
+.q-counter { font-size: 13px; color: var(--text3); margin-bottom: 8px; font-weight: 500; }
+.q-cat-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.q-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin-bottom: 20px;
+}
+.q-label { font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
+.q-situation {
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--text);
+  font-style: italic;
+}
+
+.q-instruction { font-size: 14px; color: var(--text2); margin-bottom: 14px; font-weight: 500; }
+
+.options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.opt-btn {
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  cursor: pointer;
+  transition: all .18s;
+}
+.opt-btn:hover:not(:disabled) { border-color: var(--accent); background: #F0FDF4; }
+.opt-btn.selected { border-color: var(--accent); background: #F0FDF4; }
+.opt-btn.correct { border-color: #22C55E; background: var(--green-bg); color: var(--green); font-weight: 500; }
+.opt-btn.wrong { border-color: #EF4444; background: var(--red-bg); color: var(--red); }
+.opt-btn.reveal-correct { border-color: #22C55E; background: var(--green-bg); color: var(--green); }
+.opt-btn:disabled { cursor: default; }
+
+.feedback-box {
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  line-height: 1.65;
+  margin-bottom: 16px;
+  display: none;
+}
+.feedback-box.show { display: block; }
+.feedback-box.ok { background: var(--green-bg); color: var(--green); border-left: 4px solid #22C55E; }
+.feedback-box.no { background: var(--red-bg); color: var(--red); border-left: 4px solid #EF4444; }
+
+.why-box {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.65;
+  margin-bottom: 20px;
+  display: none;
+  border-left: 3px solid var(--border);
+}
+.why-box.show { display: block; }
+
+.btn-next {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .2s;
+  display: none;
+}
+.btn-next:hover { opacity: .88; }
+.btn-next.show { display: block; }
+
+/* ── RESULT PAGE ── */
+.result-wrap {
+  max-width: 540px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 40px 0;
+}
+.result-ring {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 6px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+.result-score { font-family: 'DM Serif Display', serif; font-size: 38px; color: var(--accent); }
+.result-score-sub { font-size: 13px; color: var(--text3); }
+.result-title { font-family: 'DM Serif Display', serif; font-size: 26px; margin-bottom: 10px; }
+.result-desc { font-size: 15px; color: var(--text2); line-height: 1.7; margin-bottom: 28px; }
+
+.result-breakdown {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: left;
+  margin-bottom: 24px;
+}
+.result-breakdown h3 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+.cat-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.cat-row:last-child { margin-bottom: 0; }
+.cat-name { font-size: 13px; color: var(--text2); width: 120px; flex-shrink: 0; }
+.cat-bar-wrap { flex: 1; background: var(--bg2); border-radius: 999px; height: 8px; overflow: hidden; }
+.cat-bar-fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width .6s ease; }
+.cat-frac { font-size: 12px; color: var(--text3); width: 36px; text-align: right; flex-shrink: 0; }
+
+.btn-restart {
+  padding: 13px 32px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .2s;
+  margin-right: 10px;
+}
+.btn-restart:hover { opacity: .85; }
+.btn-materi {
+  padding: 13px 32px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-materi:hover { background: var(--bg2); }
+
+/* kuis intro */
+.kuis-intro {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.kuis-intro-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: #F0FDF4;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+  font-size: 28px;
+}
+.kuis-intro h2 { font-family: 'DM Serif Display', serif; font-size: 24px; margin-bottom: 10px; }
+.kuis-intro p { font-size: 14px; color: var(--text2); line-height: 1.7; margin-bottom: 20px; }
+.info-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+.info-chip {
+  padding: 8px 16px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text2);
+  font-weight: 500;
+}
+.btn-start {
+  padding: 14px 40px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .2s;
+}
+.btn-start:hover { opacity: .85; }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">Reframing <span>Lab</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="goPage('materi',this)">Materi</button>
+    <button class="nav-tab" onclick="goPage('kuis',this)">Kuis</button>
+  </div>
+</nav>
+
+<!-- ═══════════ MATERI PAGE ═══════════ -->
+<div class="page active" id="page-materi">
+  <div class="page-header">
+    <h1 class="page-title">Kartu Reframing</h1>
+    <p class="page-sub">Pelajari cara menggeser percakapan dari pola pikir berbasis masalah menuju berbasis aset.<br>Pilih kategori untuk memfilter situasi yang ingin dipelajari.</p>
+  </div>
+  <div class="filter-row" id="filter-row"></div>
+  <div class="result-label" id="result-label"></div>
+  <div class="cards-grid" id="cards-grid"></div>
+</div>
+
+<!-- ═══════════ KUIS PAGE ═══════════ -->
+<div class="page" id="page-kuis">
+  <div class="kuis-wrap">
+
+    <!-- Intro -->
+    <div id="kuis-intro">
+      <div class="kuis-intro">
+        <div class="kuis-intro-icon">&#9881;</div>
+        <h2>Tes Kemampuan Reframing</h2>
+        <p>Anda akan dihadapkan pada situasi nyata di lapangan.<br>Pilih kalimat reframing yang paling tepat dari tiga pilihan yang tersedia.</p>
+        <div class="info-row">
+          <div class="info-chip">15 soal</div>
+          <div class="info-chip">6 kategori situasi</div>
+          <div class="info-chip">Acak setiap sesi</div>
+        </div>
+        <button class="btn-start" onclick="startKuis()">Mulai Kuis</button>
+      </div>
+    </div>
+
+    <!-- Soal -->
+    <div id="kuis-soal" class="hidden">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+      <div class="q-counter" id="q-counter"></div>
+      <div class="q-cat-badge" id="q-badge"></div>
+
+      <div class="q-box">
+        <div class="q-label">Situasi di lapangan</div>
+        <div class="q-situation" id="q-sit"></div>
+      </div>
+
+      <div class="q-instruction">Pilih kalimat reframing yang paling efektif:</div>
+      <div class="options" id="options"></div>
+
+      <div class="feedback-box" id="feedback"></div>
+      <div class="why-box" id="why-box"></div>
+      <button class="btn-next" id="btn-next" onclick="nextQ()">Lanjut →</button>
+    </div>
+
+    <!-- Hasil -->
+    <div id="kuis-hasil" class="hidden">
+      <div class="result-wrap">
+        <div class="result-ring">
+          <div class="result-score" id="res-score"></div>
+          <div class="result-score-sub" id="res-frac"></div>
+        </div>
+        <h2 class="result-title" id="res-title"></h2>
+        <p class="result-desc" id="res-desc"></p>
+        <div class="result-breakdown" id="res-breakdown"></div>
+        <div>
+          <button class="btn-restart" onclick="startKuis()">Ulangi Kuis</button>
+          <button class="btn-materi" onclick="goPage('materi', document.querySelector('.nav-tab'))">Pelajari Materi</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {
+    cat: "defensif",
+    situation: "KS berkata: 'Sekolah kami memang sudah dari dulu begini. Bapak/Ibu yang baru datang belum tentu paham kondisi kami.'",
+    options: [
+      { text: "Justru karena saya dari luar, saya bisa melihat lebih objektif dan netral.", correct: false },
+      { text: "Betul, Bapak/Ibu jauh lebih paham konteks di sini. Justru itu yang saya butuhkan — dari semua yang sudah berjalan, mana yang menurut Bapak/Ibu paling berhasil?", correct: true },
+      { text: "Saya tidak bermaksud menilai, saya hanya ingin membantu sekolah berkembang.", correct: false }
+    ],
+    why: "Mengakui otoritas KS terlebih dahulu, lalu mengarahkan ke aset yang sudah ada — bukan membalik posisi atau membela diri."
+  },
+  {
+    cat: "defensif",
+    situation: "KS berkata: 'Program-program dari luar sudah banyak masuk ke sini. Ujungnya sama saja — pergi begitu selesai.'",
+    options: [
+      { text: "Program ini berbeda, kami berkomitmen untuk jangka panjang dan ada evaluasinya.", correct: false },
+      { text: "Saya mengerti kekecewaan itu. Dari semua program yang pernah masuk, adakah satu hal kecil yang ternyata tetap bertahan sampai sekarang?", correct: true },
+      { text: "Program kami dirancang berbeda karena ada monitoring yang ketat dari pusat.", correct: false }
+    ],
+    why: "Validasi rasa lelah dan kecewa tanpa janji kosong, lalu cari bukti ketahanan kecil yang sudah ada sebagai fondasi kepercayaan."
+  },
+  {
+    cat: "defensif",
+    situation: "KS berkata: 'Kami tidak butuh orang luar yang mengajari kami cara kerja.'",
+    options: [
+      { text: "Saya tidak bermaksud mengajari, saya hanya ingin berbagi pengalaman dari tempat lain.", correct: false },
+      { text: "Saya di sini bukan untuk mengajari. Saya di sini untuk belajar dari Bapak/Ibu — kalau boleh mulai dari sana: kekuatan terbesar sekolah ini menurut Bapak/Ibu apa?", correct: true },
+      { text: "Tentu saja Bapak/Ibu yang paling paham, tapi ada hal-hal baru yang mungkin belum sempat dicoba.", correct: false }
+    ],
+    why: "Membalik posisi secara tulus dari expert ke learner. Ini membuka pintu yang paling tertutup sekalipun, karena KS merasa dihargai bukan digurui."
+  },
+  {
+    cat: "pesimis",
+    situation: "KS berkata: 'Percuma. Murid-murid di sini sulit diatur. Orang tuanya juga tidak mendukung.'",
+    options: [
+      { text: "Mungkin perlu pendekatan yang berbeda ke orang tua agar mereka lebih terlibat.", correct: false },
+      { text: "Di tengah semua itu, masih ada guru-guru yang tetap datang setiap hari dan mengajar. Apa yang membuat mereka bertahan, menurut Bapak/Ibu?", correct: true },
+      { text: "Sebenarnya murid susah diatur itu tanda mereka butuh pendekatan yang lebih kreatif.", correct: false }
+    ],
+    why: "Alihkan fokus dari masalah ke ketahanan yang sudah terbukti ada, tanpa menyangkal atau meremehkan kondisi yang dialami KS."
+  },
+  {
+    cat: "pesimis",
+    situation: "KS berkata: 'Tidak ada yang bisa diharapkan dari sekolah ini. Terlalu banyak masalah.'",
+    options: [
+      { text: "Setiap sekolah pasti punya kekuatan, tinggal kita lihat bersama-sama.", correct: false },
+      { text: "Boleh saya tanya satu hal — dari semua murid yang pernah Bapak/Ibu ajar, adakah satu murid yang membuat kerja keras ini terasa worth it?", correct: true },
+      { text: "Masalah memang banyak, tapi kalau kita fokus ke solusi pasti bisa diatasi satu per satu.", correct: false }
+    ],
+    why: "Pertanyaan spesifik tentang satu murid jauh lebih menggerakkan daripada pernyataan umum tentang kekuatan. Ia menyentuh motivasi intrinsik yang sudah ada."
+  },
+  {
+    cat: "pesimis",
+    situation: "KS berkata: 'Internet tidak ada, listrik sering mati, guru kurang — mau digitalisasi seperti apa?'",
+    options: [
+      { text: "Ada platform yang bisa diakses offline, jadi tidak perlu internet terus-menerus.", correct: false },
+      { text: "Kondisinya memang berat. Dengan kondisi seperti itu, bagaimana guru-guru di sini selama ini tetap bisa mengajar? Pasti ada cara yang sudah ditemukan — ceritakan ke saya.", correct: true },
+      { text: "Digitalisasi tidak harus lengkap, kita bisa mulai dari yang paling sederhana dulu.", correct: false }
+    ],
+    why: "Mengakui realita keterbatasan, lalu menggali kearifan lokal yang sudah ada sebagai aset nyata — bukan langsung menawarkan solusi dari luar."
+  },
+  {
+    cat: "solusi",
+    situation: "KS berkata: 'Sudah pernah dicoba pakai teknologi, tidak jalan. Murid tidak punya HP, guru tidak bisa.'",
+    options: [
+      { text: "Mungkin waktu itu toolnya kurang tepat. Sekarang ada yang lebih mudah digunakan.", correct: false },
+      { text: "Pengalaman mencoba itu sendiri sudah sangat berharga. Waktu dicoba dulu, bagian mana yang sebenarnya hampir berhasil — kalau saja ada satu hal yang berbeda?", correct: true },
+      { text: "Kita bisa mulai dengan pelatihan guru dulu sebelum melibatkan murid dan teknologi.", correct: false }
+    ],
+    why: "Mengambil nilai dari kegagalan masa lalu alih-alih melupakannya. Ini menghormati usaha yang sudah pernah dilakukan dan membuka refleksi yang produktif."
+  },
+  {
+    cat: "solusi",
+    situation: "KS berkata: 'Kami sudah punya program sendiri. Tidak perlu tambah program baru lagi.'",
+    options: [
+      { text: "Program ini tidak menggantikan yang sudah ada, ini hanya sebagai pelengkap saja.", correct: false },
+      { text: "Bagus sekali. Boleh Bapak/Ibu ceritakan program itu? Saya ingin belajar — siapa tahu ada yang bisa saling menguatkan.", correct: true },
+      { text: "Justru dengan program baru ini, program yang sudah ada bisa lebih optimal lagi.", correct: false }
+    ],
+    why: "Genuine curiosity tentang program yang sudah ada — bukan bersaing atau merendahkan, tapi menjajaki sinergi dengan posisi yang menghargai inisiatif mereka."
+  },
+  {
+    cat: "banding",
+    situation: "KS berkata: 'Sekolah lain yang dapat bantuan lebih banyak pasti lebih mudah maju. Kami tidak diperhatikan.'",
+    options: [
+      { text: "Sekolah lain juga punya tantangannya sendiri, tidak selalu lebih mudah.", correct: false },
+      { text: "Rasa itu wajar. Dan justru karena kondisinya berbeda, saya penasaran — apa yang sekolah ini lakukan yang mungkin tidak bisa dilakukan sekolah lain yang fasilitasnya lebih lengkap?", correct: true },
+      { text: "Kami akan usahakan agar sekolah ini mendapat perhatian dan bantuan yang lebih.", correct: false }
+    ],
+    why: "Mengubah 'kekurangan fasilitas' menjadi keunikan yang berpotensi menjadi kekuatan, tanpa menyangkal rasa tidak adil yang dirasakan KS."
+  },
+  {
+    cat: "banding",
+    situation: "KS berkata: 'Kalau sekolah kota bisa, wajar. Kami di pelosok, jangan disamakan.'",
+    options: [
+      { text: "Justru sekolah di pelosok banyak yang sudah berhasil berinovasi, ada banyak contohnya.", correct: false },
+      { text: "Betul sekali, konteksnya sangat berbeda. Inovasi yang lahir dari keterbatasan sering lebih kuat dan tahan lama. Bapak/Ibu pernah tidak menemukan solusi sendiri karena terpaksa, karena tidak ada pilihan lain?", correct: true },
+      { text: "Kondisi berbeda, tapi prinsip dasarnya sama — kita perlu menyesuaikan caranya saja.", correct: false }
+    ],
+    why: "Reframe keterpaksaan sebagai inkubator kreativitas yang nyata, lalu undang mereka mengingat sendiri momen di mana keterbatasan melahirkan solusi."
+  },
+  {
+    cat: "menggurui",
+    situation: "KS berkata: 'Mudah ngomong teori. Coba praktek sendiri di sini.'",
+    options: [
+      { text: "Saya sudah punya pengalaman lapangan dan memahami tantangan di sekolah 3T.", correct: false },
+      { text: "Bapak/Ibu benar. Saya tidak akan tahu semua tantangan sampai benar-benar bekerja di sini. Makanya saya butuh panduan dari Bapak/Ibu — kalau mau mulai satu langkah kecil yang realistis, menurut Bapak/Ibu mulainya dari mana?", correct: true },
+      { text: "Teori ini sudah terbukti di banyak sekolah dengan kondisi serupa, bukan hanya teori kosong.", correct: false }
+    ],
+    why: "Mengakui keterbatasan diri secara tulus, lalu minta KS menjadi pemimpin proses — bukan objeknya. Ini membalik dinamika secara elegan."
+  },
+  {
+    cat: "menggurui",
+    situation: "KS berkata: 'Teorinya bagus. Tapi di lapangan lain cerita.'",
+    options: [
+      { text: "Saya juga sudah banyak melihat kasus nyata dan memahami gap antara teori dan praktik.", correct: false },
+      { text: "Setuju, selalu ada gap antara teori dan lapangan. Bapak/Ibu yang paling tahu gap itu di sini — situasi seperti apa yang paling sering bikin rencana bagus tidak jalan?", correct: true },
+      { text: "Justru itu, teori ini memang dirancang fleksibel agar bisa disesuaikan dengan kondisi lapangan.", correct: false }
+    ],
+    why: "Mengundang KS menjadi sumber pengetahuan tentang konteks lapangan — posisi yang mereka kuasai sepenuhnya dan membangun rasa dihargai."
+  },
+  {
+    cat: "emosi",
+    situation: "KS tampak frustrasi: 'Saya sudah capek. Setiap tahun ada program baru, lalu hilang. Saya yang repot.'",
+    options: [
+      { text: "Saya mengerti rasa lelah Bapak/Ibu. Program ini tidak akan seperti itu karena ada komitmen yang jelas.", correct: false },
+      { text: "Kelelahan Bapak/Ibu itu masuk akal. Bekerja keras tanpa melihat hasil yang bertahan — itu berat. Boleh saya tanya: di tengah semua itu, apa satu hal yang membuat Bapak/Ibu masih mau datang ke sekolah setiap pagi?", correct: true },
+      { text: "Memang repot di awal, tapi nanti kalau sudah berjalan Bapak/Ibu tidak perlu banyak terlibat.", correct: false }
+    ],
+    why: "Validasi emosi tanpa janji kosong. Lalu temukan sumber motivasi intrinsik yang masih hidup — itulah aset paling berharga yang ada di dalam diri KS."
+  },
+  {
+    cat: "emosi",
+    situation: "KS dengan nada keras: 'Kenapa harus sekolah kami yang jadi tempat percobaan?'",
+    options: [
+      { text: "Sekolah Bapak/Ibu dipilih karena potensinya besar dan kami percaya pada kemampuan tim di sini.", correct: false },
+      { text: "Perasaan itu valid. Tidak ada yang mau dijadikan objek program tanpa didengar lebih dulu. Sebelum apapun dimulai — apa yang paling penting bagi Bapak/Ibu untuk sekolah ini ke depannya?", correct: true },
+      { text: "Ini bukan percobaan, ini program resmi yang sudah dirancang dengan matang.", correct: false }
+    ],
+    why: "Akui rasa tidak nyaman secara penuh, kemudian kembalikan kontrol ke tangan KS dengan pertanyaan tentang visinya sendiri untuk sekolahnya."
+  },
+  {
+    cat: "emosi",
+    situation: "KS berkata pelan tapi menyerah: 'Saya sudah tidak tahu harus mulai dari mana.'",
+    options: [
+      { text: "Tenang, nanti kita buat rencana bersama step by step supaya lebih mudah dijalankan.", correct: false },
+      { text: "Tidak tahu harus mulai dari mana itu bukan tanda menyerah — itu tanda bahwa Bapak/Ibu peduli tapi kewalahan. Satu minggu terakhir, hal kecil apa di sekolah ini yang membuat Bapak/Ibu merasa ada yang masih berjalan dengan baik?", correct: true },
+      { text: "Kita mulai dari yang paling mudah dan paling dekat dulu, tidak perlu semuanya sekaligus.", correct: false }
+    ],
+    why: "Reframe 'tidak tahu mulai dari mana' sebagai sinyal kepedulian bukan kelemahan, lalu tuntun ke bukti kecil yang nyata dan konkret."
+  }
+];
+
+const CATS = {
+  defensif: { label: "Defensif", cls: "b-defensif" },
+  pesimis:  { label: "Pesimis",  cls: "b-pesimis" },
+  solusi:   { label: "Tolak solusi", cls: "b-solusi" },
+  banding:  { label: "Membanding", cls: "b-banding" },
+  menggurui:{ label: "Merasa digurui", cls: "b-menggurui" },
+  emosi:    { label: "Emosional", cls: "b-emosi" }
+};
+
+// ── MATERI ──
+let activeFilter = 'semua';
+
+function buildFilterRow() {
+  const row = document.getElementById('filter-row');
+  const all = ['semua', ...Object.keys(CATS)];
+  row.innerHTML = all.map(k => {
+    const label = k === 'semua' ? 'Semua' : CATS[k].label;
+    return `<button class="chip ${k==='semua'?'on':''}" onclick="setFilter('${k}',this)">${label}</button>`;
+  }).join('');
+}
+
+function setFilter(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('#filter-row .chip').forEach(c => c.classList.remove('on'));
+  btn.classList.add('on');
+  renderCards();
+}
+
+function renderCards() {
+  const list = activeFilter === 'semua' ? DATA : DATA.filter(d => d.cat === activeFilter);
+  document.getElementById('result-label').textContent = list.length + ' kartu reframing';
+  document.getElementById('cards-grid').innerHTML = list.map(d => {
+    const c = CATS[d.cat];
+    const bad = d.options.find(o => !o.correct).text;
+    const good = d.options.find(o => o.correct).text;
+    return `<div class="mcard">
+      <div class="mcard-top">
+        <div class="mcard-sit">${d.situation}</div>
+        <span class="badge ${c.cls}">${c.label}</span>
+      </div>
+      <div class="mcard-divider"></div>
+      <div>
+        <div class="pill-label lbl-avoid">Hindari</div>
+        <div class="mcard-bad">${bad}</div>
+      </div>
+      <div>
+        <div class="pill-label lbl-good">Reframing</div>
+        <div class="mcard-good">${good}</div>
+      </div>
+      <div>
+        <div class="pill-label lbl-why">Mengapa efektif</div>
+        <div class="mcard-why">${d.why}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── KUIS ──
+let quizData = [], qIdx = 0, score = 0, catScore = {}, answered = false;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function startKuis() {
+  quizData = shuffle(DATA);
+  qIdx = 0; score = 0; catScore = {};
+  Object.keys(CATS).forEach(k => catScore[k] = { right: 0, total: 0 });
+
+  document.getElementById('kuis-intro').classList.add('hidden');
+  document.getElementById('kuis-hasil').classList.add('hidden');
+  document.getElementById('kuis-soal').classList.remove('hidden');
+  showQ();
+}
+
+function showQ() {
+  answered = false;
+  const q = quizData[qIdx];
+  const total = quizData.length;
+  const pct = Math.round((qIdx / total) * 100);
+
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('q-counter').textContent = 'Soal ' + (qIdx+1) + ' dari ' + total;
+
+  const badge = document.getElementById('q-badge');
+  const c = CATS[q.cat];
+  badge.textContent = c.label;
+  badge.className = 'q-cat-badge badge ' + c.cls;
+
+  document.getElementById('q-sit').textContent = q.situation;
+
+  const opts = shuffle(q.options);
+  document.getElementById('options').innerHTML = opts.map((o,i) =>
+    `<button class="opt-btn" onclick="pick(this,${o.correct})" id="opt-${i}">${o.text}</button>`
+  ).join('');
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback-box'; fb.textContent = '';
+  const wb = document.getElementById('why-box');
+  wb.className = 'why-box'; wb.textContent = '';
+  document.getElementById('btn-next').classList.remove('show');
+}
+
+function pick(btn, correct) {
+  if (answered) return;
+  answered = true;
+  const q = quizData[qIdx];
+  catScore[q.cat].total++;
+
+  document.querySelectorAll('.opt-btn').forEach(b => {
+    b.disabled = true;
+    const isCorrect = b === btn ? correct : !correct && b.textContent === q.options.find(o=>o.correct).text;
+  });
+
+  // Mark clicked
+  if (correct) {
+    btn.classList.add('correct');
+    score++;
+    catScore[q.cat].right++;
+  } else {
+    btn.classList.add('wrong');
+    // Reveal correct
+    document.querySelectorAll('.opt-btn').forEach(b => {
+      const txt = b.textContent.trim();
+      if (q.options.find(o => o.correct && o.text === txt)) b.classList.add('reveal-correct');
+    });
+  }
+
+  const fb = document.getElementById('feedback');
+  if (correct) {
+    fb.textContent = 'Tepat! Kalimat itu berhasil membuka ruang tanpa memposisikan diri sebagai pihak yang lebih tahu.';
+    fb.className = 'feedback-box ok show';
+  } else {
+    fb.textContent = 'Belum tepat. Perhatikan kalimat yang benar di atas — perbedaannya ada pada cara memvalidasi sebelum mengajukan pertanyaan.';
+    fb.className = 'feedback-box no show';
+  }
+
+  const wb = document.getElementById('why-box');
+  wb.textContent = 'Mengapa efektif: ' + q.why;
+  wb.className = 'why-box show';
+
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.textContent = qIdx + 1 < quizData.length ? 'Soal berikutnya →' : 'Lihat hasil';
+  nextBtn.classList.add('show');
+}
+
+function nextQ() {
+  qIdx++;
+  if (qIdx < quizData.length) {
+    showQ();
+  } else {
+    showHasil();
+  }
+}
+
+function showHasil() {
+  document.getElementById('kuis-soal').classList.add('hidden');
+  document.getElementById('kuis-hasil').classList.remove('hidden');
+
+  const total = quizData.length;
+  const pct = Math.round((score / total) * 100);
+
+  document.getElementById('res-score').textContent = pct + '%';
+  document.getElementById('res-frac').textContent = score + '/' + total + ' benar';
+
+  let title, desc;
+  if (pct >= 87) {
+    title = 'Fasilitator Handal';
+    desc = 'Kemampuan reframing Anda sangat kuat. Anda mampu membaca situasi dan merespons dengan empati tanpa menggurui — inilah yang paling dibutuhkan di lapangan.';
+  } else if (pct >= 67) {
+    title = 'Terus Berlatih';
+    desc = 'Fondasi pemahaman Anda sudah baik. Beberapa situasi masih bisa direspons dengan lebih efektif. Pelajari kembali kartu-kartu di bagian Materi, khususnya kategori yang masih perlu ditingkatkan.';
+  } else {
+    title = 'Kembali ke Materi';
+    desc = 'Reframing butuh latihan. Pelajari dulu kartu-kartu di bagian Materi — perhatikan pola perbedaan antara kalimat yang "terdengar baik" tapi tidak efektif, dengan kalimat yang benar-benar membuka ruang.';
+  }
+
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-desc').textContent = desc;
+
+  // Breakdown per kategori
+  const bd = document.getElementById('res-breakdown');
+  const rows = Object.entries(catScore).map(([k, v]) => {
+    if (v.total === 0) return '';
+    const bpct = Math.round((v.right / v.total) * 100);
+    return `<div class="cat-row">
+      <div class="cat-name">${CATS[k].label}</div>
+      <div class="cat-bar-wrap"><div class="cat-bar-fill" style="width:${bpct}%"></div></div>
+      <div class="cat-frac">${v.right}/${v.total}</div>
+    </div>`;
+  }).join('');
+  bd.innerHTML = '<h3>Performa per kategori</h3>' + rows;
+}
+
+// ── NAV ──
+function goPage(id, clickedBtn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  if (clickedBtn) clickedBtn.classList.add('active');
+  else {
+    const tabs = document.querySelectorAll('.nav-tab');
+    if (id === 'materi') tabs[0].classList.add('active');
+    else tabs[1].classList.add('active');
+  }
+  if (id === 'kuis') {
+    document.getElementById('kuis-intro').classList.remove('hidden');
+    document.getElementById('kuis-soal').classList.add('hidden');
+    document.getElementById('kuis-hasil').classList.add('hidden');
+  }
+}
+
+// ── INIT ──
+buildFilterRow();
+renderCards();
+</script>
+</body>
+</html>
